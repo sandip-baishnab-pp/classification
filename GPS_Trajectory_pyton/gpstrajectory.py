@@ -16,3 +16,5 @@ matplotlib.style.use("ggplot")
 #reading data
 go_track_tracks=pd.read_csv("C:/Sandip_Debjani/Sandip/Git/program/data/GPS_Trajectory_classification/go_track_tracks.csv")
 go_track_trackspoints=pd.read_csv("C:/Sandip_Debjani/Sandip/Git/program/data/GPS_Trajectory_classification/go_track_trackspoints.csv")
+
+print go_track_tracks.head(5)
