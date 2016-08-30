@@ -2,19 +2,23 @@
 library(e1071)
 
 #variables to be analyzed
-variables->c("speed","time","distance","rating","rating_weather","car_or_bus","rating_bus")
+variables <- c("speed","time","distance","rating","rating_weather","car_or_bus","rating_bus")
 
 #reading data
-data->read.csv("C:/Sandip_Debjani/Sandip/Git/program/data/GPS_Trajectory_classification/go_track_tracks.csv")
+data <- read.csv("C:/Sandip_Debjani/Sandip/Git/program/data/GPS_Trajectory_classification/go_track_tracks.csv")
 
 #data slicing
-slice_data->data[variables]
-train->slice_data[c(1:150),]
-test->slice_data[c(151:nrow(slice_data)),]
-test->subset(test,select=-c("rating_bus"))
+slice_data <- data[variables]
+train <- slice_data[c(1:150),]
+train_x <-subset(train,select = -rating_bus)
+train_y <-train["rating_bus"]
+test <- slice_data[c(151:nrow(slice_data)),]
+test_x <- subset(test,select = -rating_bus)
+test_y <- test["rating_bus"]
 
-
-
+#model svm
+sv=svm(x=train_x,y=train_y,type="C-classification")
+sv_predict=predict(sv,test_x)
 
 # data_work=subset(data,select=-c(id,linha))
 # 
