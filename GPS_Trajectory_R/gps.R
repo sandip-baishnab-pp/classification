@@ -1,5 +1,6 @@
 #required library
 library(e1071)
+library(randomForest)
 
 #variables to be analyzed
 variables <- c("speed","time","distance","rating","rating_weather","car_or_bus","rating_bus")
@@ -19,6 +20,16 @@ test_y <- test["rating_bus"]
 #model svm
 sv=svm(x=train_x,y=train_y,type="C-classification")
 sv_predict=predict(sv,test_x)
+
+#naive bayes
+train$rating_bus<-as.factor(train$rating_bus)
+nb=naiveBayes(train_x,train$rating_bus)
+nb_predict=predict(nb,test_x)
+
+#random forest
+
+rf=randomForest(train_x,train$rating_bus)
+rf_predict=predict(rf,test_x)
 
 # data_work=subset(data,select=-c(id,linha))
 # 
