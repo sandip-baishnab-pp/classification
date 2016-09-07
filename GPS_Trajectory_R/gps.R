@@ -1,6 +1,62 @@
+#ensemble learning majority voting
+
 #required library
+library(rpart)
+
 library(e1071)
 library(randomForest)
+
+#ensemble learning majority voting function
+majority_voting <- function(data)
+{
+
+   #class to be returned
+   class=c()
+   
+   for( i in 1:nrow(data))
+   {
+       count_zero <-0
+       count_one <-0
+       count_two <-0
+       count_three <-0
+       
+       for(j in 1:ncol(data))
+       {
+              if(data[i,j] == 0)
+              {
+
+                  count_zero <- count_zero + 1
+
+               }
+               else if(data[i,j]==1)
+               {
+                  count_one <- count_one + 1
+               }
+
+               else if(data[i,j]==2)
+               {
+                  count_two <- count_two + 1
+               }
+               else if(data[i,j]==3)
+               {
+                  count_three <- count_three +1
+               }
+       }
+       
+       help <- c("count_zero", "count_one", "count_two","count_three")[which.max(c(count_zero, count_one, count_two,count_three))]
+
+       if(help=="count_zero")
+         class=c(class,0)
+       else if(help=="count_one")
+         class=c(class,1)
+       else if(help=="count_two")
+         class=c(class,2)
+       else if(help=="count_three")
+         class=c(class,3)
+    }
+   return(class)
+}
+  
 
 #variables to be analyzed
 variables <- c("speed","time","distance","rating","rating_weather","car_or_bus","rating_bus")
@@ -23,25 +79,25 @@ sv_predict=predict(sv,test_x)
 
 #naive bayes
 train$rating_bus<-as.factor(train$rating_bus)
-nb=naiveBayes(train_x,train$rating_bus)
-nb_predict=predict(nb,test_x)
+nb <-naiveBayes(train_x,train$rating_bus)
+nb_predict <-predict(nb,test_x)
 
 #random forest
+rf <-randomForest(train_x,train$rating_bus)
+rf_predict <-predict(rf,test_x)
 
-rf=randomForest(train_x,train$rating_bus)
-rf_predict=predict(rf,test_x)
+#ensemble learning
+sv_predict <-as.vector(sv_predict)
+nb_predict <-as.vector(nb_predict)
+rf_predict <-as.vector(rf_predict)
 
-# data_work=subset(data,select=-c(id,linha))
-# 
-# #slicing
-# data_row=nrow(data)
-# train=data_work[84:155,]
-# train_label=data[84:155,"linha"]
-# test=data_work[156:163,]
-# test_label=data_work[156:163,"linha"]
-# 
-# #model building
-# model=svm(train_label,data=train,cost=100,gamma=1)
-# pred=predict(model,test)
-# cm=table(pred=pred,true=test_label)
+#prediction dataframe
+s_n_r <-data.frame(sv_predict,nb_predict,rf_predict)
+colnames(s_n_r) <-c("svm","naivebayes","randomforest")
 
+#calling majority voting
+result <- cbind(s_n_r,vote=majority_voting(s_n_r))
+print (result)
+
+#confusion matrix
+cm <-table(pred=as.factor(result["vote"]),true=as.factor(test_y))
