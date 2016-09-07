@@ -9,10 +9,8 @@ library(randomForest)
 #ensemble learning majority voting function
 majority_voting <- function(data)
 {
-
    #class to be returned
    class=c()
-   
    for( i in 1:nrow(data))
    {
        count_zero <-0
@@ -22,17 +20,14 @@ majority_voting <- function(data)
        
        for(j in 1:ncol(data))
        {
-              if(data[i,j] == 0)
-              {
-
+               if(data[i,j] == 0)
+               {
                   count_zero <- count_zero + 1
-
                }
                else if(data[i,j]==1)
                {
                   count_one <- count_one + 1
                }
-
                else if(data[i,j]==2)
                {
                   count_two <- count_two + 1
@@ -57,12 +52,11 @@ majority_voting <- function(data)
    return(class)
 }
   
-
 #variables to be analyzed
 variables <- c("speed","time","distance","rating","rating_weather","car_or_bus","rating_bus")
 
 #reading data
-data <- read.csv("C:/Sandip_Debjani/Sandip/Git/program/data/GPS_Trajectory_classification/go_track_tracks.csv")
+data <- read.csv("C:/Sandip_Dj/Sandip/Git/program/data/GPS_Trajectory_classification/go_track_tracks.csv")
 
 #data slicing
 slice_data <- data[variables]
@@ -96,8 +90,8 @@ s_n_r <-data.frame(sv_predict,nb_predict,rf_predict)
 colnames(s_n_r) <-c("svm","naivebayes","randomforest")
 
 #calling majority voting
-result <- cbind(s_n_r,vote=majority_voting(s_n_r))
+result <- cbind(s_n_r,vote=majority_voting(s_n_r),original=test_y)
 print (result)
 
 #confusion matrix
-cm <-table(pred=as.factor(result["vote"]),true=as.factor(test_y))
+cm <-table(pred=as.factor(unlist(result["vote"])),true=as.factor(unlist(test_y)))
