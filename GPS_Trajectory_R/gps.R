@@ -2,6 +2,7 @@
 
 #required library
 library(rpart)
+library(caret)
 
 library(e1071)
 library(randomForest)
@@ -94,4 +95,5 @@ result <- cbind(s_n_r,vote=majority_voting(s_n_r),original=test_y)
 print (result)
 
 #confusion matrix
-cm <-table(pred=as.factor(unlist(result["vote"])),true=as.factor(unlist(test_y)))
+#cm <-table(pred=as.factor(unlist(result["vote"])),true=as.factor(unlist(test_y)))
+cm <-confusionMatrix(result["vote"],test_y)
