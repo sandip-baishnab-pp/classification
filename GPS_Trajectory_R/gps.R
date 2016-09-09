@@ -97,3 +97,8 @@ print (result)
 #confusion matrix
 #cm <-table(pred=as.factor(unlist(result["vote"])),true=as.factor(unlist(test_y)))
 cm <-confusionMatrix(result["vote"],test_y)
+
+#precision recall and f1 measure
+#precision<- posPredValue(as.vector(result["vote"]),as.vector(test_y))
+#recall <- sensitivity(result["vote"],test_y)
+#F1 <- (2 * precision * recall) / (precision + recall)
